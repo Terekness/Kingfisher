@@ -327,7 +327,7 @@ open class ImageDownloader {
                        retrieveImageTask: RetrieveImageTask? = nil,
                        options: KingfisherOptionsInfo? = nil,
                        progressBlock: ImageDownloaderProgressBlock? = nil,
-                       body: [String : String] = [:],
+                       body: [String : String]? = nil,
                        completionHandler: ImageDownloaderCompletionHandler? = nil) -> RetrieveImageDownloadTask?
     {
         if let retrieveImageTask = retrieveImageTask, retrieveImageTask.cancelledBeforeDownloadStarting {
@@ -340,6 +340,13 @@ open class ImageDownloader {
         // We need to set the URL as the load key. So before setup progress, we need to ask the `requestModifier` for a final URL.
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: timeout)
         request.httpShouldUsePipelining = requestsUsePipelining
+        request.httpMethod = "POST"
+        
+        if let body = body, var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false), !body.isEmpty {
+            let percentEncodedQuery = (urlComponents.percentEncodedQuery.map { $0 + "&" } ?? "") + query(body)
+            urlComponents.percentEncodedQuery = percentEncodedQuery
+            request.url = urlComponents.url
+        }
 
         if let modifier = options?.modifier {
             guard let r = modifier.modified(for: request) else {
