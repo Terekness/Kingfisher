@@ -327,6 +327,7 @@ open class ImageDownloader {
                        retrieveImageTask: RetrieveImageTask? = nil,
                        options: KingfisherOptionsInfo? = nil,
                        progressBlock: ImageDownloaderProgressBlock? = nil,
+                       body: [String : String] = [:],
                        completionHandler: ImageDownloaderCompletionHandler? = nil) -> RetrieveImageDownloadTask?
     {
         if let retrieveImageTask = retrieveImageTask, retrieveImageTask.cancelledBeforeDownloadStarting {
