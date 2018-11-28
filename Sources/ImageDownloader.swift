@@ -493,6 +493,10 @@ open class ImageDownloader {
     }
 }
 
+extension NSNumber {
+    fileprivate var isBool: Bool { return CFBooleanGetTypeID() == CFGetTypeID(self) }
+}
+
 // MARK: - Download method
 extension ImageDownloader {
     
